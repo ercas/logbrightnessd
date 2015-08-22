@@ -10,25 +10,31 @@ msgdir=/tmp/logbrightnessd
 
 factor=$(echo "$(cat $iface/max_brightness)/(2^$levels)" | bc -l)
 
-#for brightness in $(seq $levels); do
-#    sleep 0.5
-#    echo "(2^$brightness)*$factor" | bc | cut -d "." -f1 > $iface/brightness
-#done
+########## functions
+
+quit() {
+    rm -rf $msgdir;
+    echo $(cat $iface/max_brightness) > $iface/brightness
+    echo "brightness has been reset to max"
+}
 
 ########## setup
 
 if [ $EUID = 0 ]; then
     chmod g+r $iface/brightness
 else
-    echo "this script must be run as root."; exit 1
+    echo "this script must be run as root."
+    exit 1
 fi
 shopt -s dotglob # just in case people try to spam $msgdir with dotfiles
 mkdir -p $msgdir
 chmod a+rwx $msgdir
+echo $(cat $iface/max_brightness) > $iface/brightness
 echo 10 >$msgdir/current_brightness
 
 ########## logbrightnessd
 
+trap quit SIGINT SIGTERM
 rm -rf $msgdir/*
 while inotifywait -q -e CREATE $msgdir > /dev/null; do
     for f in $msgdir/*; do

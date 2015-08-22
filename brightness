@@ -2,6 +2,8 @@
 
 msgdir=/tmp/logbrightnessd
 
+! [ -d $msgdir ] && echo "logbrightnessd is not running." && exit 1
+
 if [ "$1" = "up" ]; then
     >$msgdir/$(($(cat $msgdir/current_brightness)+1))
 elif [ "$1" = "down" ]; then

@@ -1,0 +1,10 @@
+[Unit]
+Description=Logarithmic brightness daemon
+Wants=graphical.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/logbrightnessd
+
+[Install]
+WantedBy=multi-user.target
