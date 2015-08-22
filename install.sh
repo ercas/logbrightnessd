@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ! [ $EUID = 0 ] && echo "this script must be run as root." && exit 0
 cd "$(dirname "$(readlink -f $0)")"
@@ -6,7 +6,7 @@ cd "$(dirname "$(readlink -f $0)")"
 alias cp="cp -v"
 alias ln="ln -v"
 alias rm="rm -fv"
-usage() {
+function usage() {
     cat << EOF
 please specify one of the following:
 
@@ -16,7 +16,7 @@ systemd      install the logbrightnessd and brightness scripts and create a new
 uninstall    remove everything
 EOF
 }
-controls() {
+function controls() {
     cat << EOF
 
 use "brightness" to control logbrightnessd. for more details, see README.md.
