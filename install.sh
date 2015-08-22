@@ -3,9 +3,6 @@
 ! [ $EUID = 0 ] && echo "this script must be run as root." && exit 0
 cd "$(dirname "$(readlink -f $0)")"
 
-alias cp="cp -v"
-alias ln="ln -v"
-alias rm="rm -fv"
 function usage() {
     cat << EOF
 please specify one of the following:
@@ -28,7 +25,7 @@ if [ -z $1 ]; then
 else
     case $1 in
         basic)
-            cp logbrightnessd brightness /usr/local/bin/
+            cp -v logbrightnessd brightness /usr/local/bin/
             cat << EOF
 
 use "logbrightnessd" to start logbrightnessd.
@@ -37,9 +34,9 @@ EOF
             controls
             ;;
         systemd)
-            cp logbrightnessd brightness /usr/local/bin/
-            cp logbrightnessd.service /lib/systemd/system/
-            ln -s /lib/systemd/system/logbrightnessd.service \
+            cp -v logbrightnessd brightness /usr/local/bin/
+            cp -v logbrightnessd.service /lib/systemd/system/
+            ln -vs /lib/systemd/system/logbrightnessd.service \
                   /etc/systemd/system/logbrightnessd.service
             systemctl daemon-reload
             cat << EOF
@@ -53,10 +50,12 @@ EOF
             ;;
         uninstall)
             systemctl stop logbrightnessd
+            systemctl disable logbrightnessd
             killall logbrightnessd
-            rm /usr/local/bin/{logbrightnessd,brightness} \
+            rm -v /usr/local/bin/{logbrightnessd,brightness} \
                /lib/systemd/system/logbrightnessd.service \
                /etc/systemd/system/logbrightnessd.service
+            systemctl daemon-reload
             echo -e "\nlogbrightnessd has been removed."
             ;;
         *)

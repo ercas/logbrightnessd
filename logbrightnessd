@@ -30,7 +30,7 @@ shopt -s dotglob # just in case people try to spam $msgdir with dotfiles
 mkdir -p $msgdir
 chmod a+rwx $msgdir
 echo $(cat $iface/max_brightness) > $iface/brightness
-echo 10 >$msgdir/current_brightness
+echo 10 > $msgdir/current_brightness
 
 ########## logbrightnessd
 

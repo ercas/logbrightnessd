@@ -4,12 +4,15 @@ msgdir=/tmp/logbrightnessd
 
 ! [ -d $msgdir ] && echo "logbrightnessd is not running." && exit 1
 
+! [ -f $msgdir/current_brightness ] && brightness=10 || \
+  brightness=$(cat $msgdir/current_brightness | cut -d " " -f1)
+
 if [ "$1" = "up" ]; then
-    >$msgdir/$(($(cat $msgdir/current_brightness)+1))
+    > $msgdir/$(($brightness+1))
 elif [ "$1" = "down" ]; then
-    >$msgdir/$(($(cat $msgdir/current_brightness)-1))
+    > $msgdir/$(($brightness-1))
 elif [ "$1" -eq "$1" ] 2>/dev/null; then
-    >$msgdir/$1
+    > $msgdir/$1
 else
     echo "$1 is not an integer."
 fi
