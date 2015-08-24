@@ -20,10 +20,12 @@ quit() {
 
 ########## setup
 
+pgrep logbrightnessd > /dev/null && \
+    echo "logbrightnessd is already running" && exit 1
 if [ $EUID = 0 ]; then
     chmod g+r $iface/brightness
 else
-    echo "this script must be run as root."
+    echo "this script must be run as root"
     exit 1
 fi
 shopt -s dotglob # just in case people try to spam $msgdir with dotfiles

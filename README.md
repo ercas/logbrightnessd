@@ -3,8 +3,8 @@ logarithmic brightness daemon based on insight from [lizardthunder](http://githu
 
 dependencies
 ------------
-inotify-tools
-systemd (if you want to install logbrightnessd as a systemd service)
+* inotify-tools
+* systemd (if you want to install logbrightnessd as a systemd service)
 
 synposis
 --------

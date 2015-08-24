@@ -34,6 +34,10 @@ EOF
             controls
             ;;
         systemd)
+            if ! command -v systemctl > /dev/null; then
+                echo "systemctl is not available."
+                exit 1
+            fi
             cp -v logbrightnessd brightness /usr/local/bin/
             cp -v logbrightnessd.service /lib/systemd/system/
             ln -vs /lib/systemd/system/logbrightnessd.service \
