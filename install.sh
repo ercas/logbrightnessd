@@ -64,8 +64,8 @@ EOF
             cat << EOF
 
 logbrightnessd will now be automatically started after booting.
-use "initctl start logbrightnessd.service" to start logbrightnessd.
-use "initctl stop logbrightnessd.service" to stop logbrightnessd.
+use "initctl start logbrightnessd" to start logbrightnessd.
+use "initctl stop logbrightnessd" to stop logbrightnessd.
 EOF
             ;;
         uninstall)
