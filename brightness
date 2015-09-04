@@ -7,7 +7,9 @@ msgdir=/run/logbrightnessd
 ! [ -f $msgdir/current_brightness ] && brightness=10 || \
   brightness=$(cat $msgdir/current_brightness | cut -d " " -f1)
 
-if [ "$1" = "up" ]; then
+if [ -z "$1" ]; then
+    cat $msgdir/current_brightness
+elif [ "$1" = "up" ]; then
     > $msgdir/$(($brightness+1))
 elif [ "$1" = "down" ]; then
     > $msgdir/$(($brightness-1))
