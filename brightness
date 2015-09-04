@@ -1,6 +1,6 @@
 #!/bin/bash
 
-msgdir=/tmp/logbrightnessd
+msgdir=/run/logbrightnessd
 
 ! [ -d $msgdir ] && echo "logbrightnessd is not running." && exit 1
 

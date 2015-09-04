@@ -4,7 +4,7 @@
 
 levels=10
 iface=/sys/class/backlight/intel_backlight/
-msgdir=/tmp/logbrightnessd
+msgdir=/run/logbrightnessd
 
 ########## defaults
 
@@ -20,8 +20,7 @@ quit() {
 
 ########## setup
 
-pgrep logbrightnessd > /dev/null && \
-    echo "logbrightnessd is already running" && exit 1
+[ -d $msgdir ] && echo "logbrightnessd folder already exists in /tmp/" && exit 1
 if [ $EUID = 0 ]; then
     chmod g+r $iface/brightness
 else

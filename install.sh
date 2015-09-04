@@ -8,8 +8,8 @@ function usage() {
 please specify one of the following:
 
 basic        only install the logbrightnessd and brightness scripts
-systemd      install the logbrightnessd and brightness scripts and create a new
-             systemd service
+systemd      install basic and create a new systemd service
+upstart      install basic and create a new upstart service
 uninstall    remove everything
 EOF
 }
@@ -19,7 +19,14 @@ function controls() {
 use "brightness" to control logbrightnessd. for more details, see README.md.
 EOF
 }
+function checkcmd() {
+    if ! command -v $1 > /dev/null; then
+        echo "$1 is not available."
+        exit 1
+    fi
+}
 
+checkcmd inotifywait
 if [ -z $1 ]; then
     usage
 else
@@ -34,12 +41,9 @@ EOF
             controls
             ;;
         systemd)
-            if ! command -v systemctl > /dev/null; then
-                echo "systemctl is not available."
-                exit 1
-            fi
+            checkcmd systemctl
             cp -v logbrightnessd brightness /usr/local/bin/
-            cp -v logbrightnessd.service /lib/systemd/system/
+            cp -v init/logbrightnessd.service /lib/systemd/system/
             ln -vs /lib/systemd/system/logbrightnessd.service \
                   /etc/systemd/system/logbrightnessd.service
             systemctl daemon-reload
@@ -52,14 +56,28 @@ use "systemctl stop logbrightnessd.service" to stop logbrightnessd.
 EOF
             controls
             ;;
+        upstart)
+            checkcmd initctl
+            cp -v logbrightnessd brightness /usr/local/bin/
+            cp -v init/logbrightnessd.conf /etc/init/
+            initctl reload-configuration
+            cat << EOF
+
+logbrightnessd will now be automatically started after booting.
+use "initctl start logbrightnessd.service" to start logbrightnessd.
+use "initctl stop logbrightnessd.service" to stop logbrightnessd.
+EOF
+            ;;
         uninstall)
-            systemctl stop logbrightnessd
-            systemctl disable logbrightnessd
-            killall logbrightnessd
+            systemctl stop logbrightnessd 2>/dev/null
+            systemctl disable logbrightnessd 2>/dev/null
+            initctl stop logbrightnessd 2>/dev/null
+            killall logbrightnessd 2>/dev/null
             rm -v /usr/local/bin/{logbrightnessd,brightness} \
                /lib/systemd/system/logbrightnessd.service \
-               /etc/systemd/system/logbrightnessd.service
-            systemctl daemon-reload
+               /etc/systemd/system/logbrightnessd.service 2>/dev/null
+            systemctl daemon-reload 2>/dev/null
+            initctl reload-configuration 2>/dev/null
             echo -e "\nlogbrightnessd has been removed."
             ;;
         *)
