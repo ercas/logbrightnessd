@@ -12,15 +12,16 @@ factor=$(echo "$(cat $iface/max_brightness)/(2^$levels)" | bc -l)
 
 ########## functions
 
-quit() {
+function quit() {
     rm -rf $msgdir;
     echo $(cat $iface/max_brightness) > $iface/brightness
     echo "brightness has been reset to max"
+    exit 0
 }
 
 ########## setup
 
-[ -d $msgdir ] && echo "logbrightnessd folder already exists in /tmp/" && exit 1
+[ -d $msgdir ] && echo "$msgdir folder already exists" && exit 1
 if [ $EUID = 0 ]; then
     chmod g+r $iface/brightness
 else
@@ -44,10 +45,10 @@ while inotifywait -q -e CREATE $msgdir > /dev/null; do
             rm -rf $f
             if [ "$level" -eq "$level" ] 2>/dev/null; then # only integers
                 level=$([ $level -lt 0 ] && echo 0 || \
-                    [ $level -gt $levels ] && echo $levels || \
-                    echo $level)
+                        [ $level -gt $levels ] && echo $levels || \
+                        echo $level)
                 echo "(2^$(echo $level | awk '{printf $1}'))*$factor" | \
-                     bc | cut -d "." -f1 > $iface/brightness
+                    bc | cut -d "." -f1 > $iface/brightness
                 echo $level > $msgdir/current_brightness
                 echo "changed brightness to $level"
             fi
