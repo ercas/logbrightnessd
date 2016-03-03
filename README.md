@@ -6,6 +6,7 @@ dependencies
 * inotify-tools
 * systemd (if you want to install logbrightnessd as a systemd service)
 * upstart (if you want to install logbrightnessd as an upstart service)
+* openrc  (if you want to install logbrightnessd as an openrc service)
 
 synposis
 --------
