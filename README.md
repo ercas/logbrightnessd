@@ -8,7 +8,7 @@ dependencies
 * upstart (if you want to install logbrightnessd as an upstart service)
 * openrc  (if you want to install logbrightnessd as an openrc service)
 
-synposis
+synopsis
 --------
 logbrightnessd, a "logarithmic brightness daemon", is a daemon that changes the backlight on a logarithmic scale instead of a linear scale. [lizardthunder](http://github.com/lizardthunder) pointed out that the human senses sense changes on a logarithmic scale, but the most common brightness controls adjust the brightness linearly; this results in almost imperceptible changes at high brightnesses (max to max-1) and very abrupt changes at low brightness (min to min+1).
 
