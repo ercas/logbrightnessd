@@ -1,5 +1,7 @@
 #!/bin/bash
 
+prefix=/usr/local
+
 ! [ $EUID = 0 ] && echo "this script must be run as root." && exit 0
 cd "$(dirname "$(readlink -f $0)")"
 
@@ -32,7 +34,9 @@ if [ -z $1 ]; then
 else
     case $1 in
         basic)
-            cp -v logbrightnessd brightness /usr/local/bin/
+            cp -v logbrightnessd brightness $prefix/bin/
+            mkdir -p $prefix/man/man1
+            cp -v brightness.1 $prefix/man/man1
             cat << EOF
 
 use "logbrightnessd" to start logbrightnessd.
@@ -42,7 +46,9 @@ EOF
             ;;
         systemd)
             checkcmd systemctl
-            cp -v logbrightnessd brightness /usr/local/bin/
+            cp -v logbrightnessd brightness $prefix/bin/
+            mkdir -p $prefix/man/man1
+            cp -v brightness.1 $prefix/man/man1
             cp -v init/logbrightnessd.service /lib/systemd/system/
             ln -vs /lib/systemd/system/logbrightnessd.service \
                   /etc/systemd/system/logbrightnessd.service
@@ -58,7 +64,9 @@ EOF
             ;;
         upstart)
             checkcmd initctl
-            cp -v logbrightnessd brightness /usr/local/bin/
+            cp -v logbrightnessd brightness $prefix/bin/
+            mkdir -p $prefix/man/man1
+            cp -v brightness.1 $prefix/man/man1
             cp -v init/logbrightnessd.conf /etc/init/
             initctl reload-configuration
             cat << EOF
@@ -73,7 +81,8 @@ EOF
             systemctl disable logbrightnessd 2>/dev/null
             initctl stop logbrightnessd 2>/dev/null
             killall logbrightnessd 2>/dev/null
-            rm -v /usr/local/bin/{logbrightnessd,brightness} \
+            rm -v $prefix/bin/{logbrightnessd,brightness} \
+               $prefix/man/man1/brightness.1
                /lib/systemd/system/logbrightnessd.service \
                /etc/systemd/system/logbrightnessd.service 2>/dev/null
             systemctl daemon-reload 2>/dev/null

@@ -1,0 +1,32 @@
+.TH "BRIGHTNESS" "1" "16 April 2017"
+
+.SH NAME
+brightness \- command line interface for logbrightnessd
+
+.SH SYNOPSIS
+\fBbrightness\fR \fILEVEL\fR
+
+.SH DESCRIPTION
+\fBbrightness\fR is a command line program that interfaces with
+\fIlogbrightnessd\fR
+by automatically creating files in \fIlogbrightnessd\fR's \fImsgdir\fR, which is,
+by default, \fI/var/run/logbrightnessd\fR.
+.PP
+\fILEVEL\fR can either be \fIup\fR, \fIdown\fR, or an integer from 0 to
+\fIlevels\fR, which is defined in \fIlogbrightnessd\fR and is set to 10 by
+default.
+
+.SH EXAMPLES
+.TP
+brightness up
+Increase the brightness by 1 level
+.TP
+brightness down
+Decrease the brightness by 1 level
+.TP
+brightness 7
+Set the brightness level to 7
+
+.SH AUTHOR
+Written by ercas <https://github.com/ercas> with insight from C.S. Leach
+<https://github.com/lizardthunder>.
