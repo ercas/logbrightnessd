@@ -12,6 +12,7 @@ please specify one of the following:
 basic        only install the logbrightnessd and brightness scripts
 systemd      install basic and create a new systemd service
 upstart      install basic and create a new upstart service
+openrc       install basic and create a new openrc service
 uninstall    remove everything
 EOF
 }
@@ -75,18 +76,36 @@ logbrightnessd will now be automatically started after booting.
 use "initctl start logbrightnessd" to start logbrightnessd.
 use "initctl stop logbrightnessd" to stop logbrightnessd.
 EOF
+            controls
+            ;;
+        openrc)
+            checkcmd openrc
+            cp -v logbrightnessd brightness /usr/local/bin/
+            cp -v init/logbrightnessd.openrc /etc/init.d/logbrightnessd
+            chmod a+x /etc/init.d/logbrightnessd
+            rc-update add logbrightnessd default
+            cat << EOF
+
+logbrightnessd will now be automatically started after booting.
+use "rc-service logbrightnessd start" to start logbrightnessd.
+use "rc-service logbrightnessd stop" to stop logbrightnessd.
+EOF
+            controls
             ;;
         uninstall)
             systemctl stop logbrightnessd 2>/dev/null
             systemctl disable logbrightnessd 2>/dev/null
             initctl stop logbrightnessd 2>/dev/null
+            rc-service logbrightnessd stop 2>/dev/null
             killall logbrightnessd 2>/dev/null
             rm -v $prefix/bin/{logbrightnessd,brightness} \
                $prefix/man/man1/brightness.1
                /lib/systemd/system/logbrightnessd.service \
-               /etc/systemd/system/logbrightnessd.service 2>/dev/null
+               /etc/systemd/system/logbrightnessd.service \
+               /etc/init.d/logbrightnessd 2>/dev/null
             systemctl daemon-reload 2>/dev/null
             initctl reload-configuration 2>/dev/null
+            rc-update delete logbrightnessd default 2>/dev/null
             echo -e "\nlogbrightnessd has been removed."
             ;;
         *)

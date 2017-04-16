@@ -1,0 +1,22 @@
+#!/usr/bin/openrc-run
+# Distributed under Apache License v2.0
+#
+
+description="A daemon to control screen brightness logarithimically. See https://github.com/ercas/logbrightnessd"
+command="/usr/local/bin/logbrightnessd"
+procname="logbrightnessd"
+pidfile="/var/run/logbrightnessd.pid"
+stopsig="SIGTERM"
+
+start() {
+    ebegin "Starting logbrightnessd"
+    start-stop-daemon --start --exec "$command" --background --make-pidfile --pidfile "$pidfile" 
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping logbrightnessd"
+    start-stop-daemon -s 15 --exec "$command" --pidfile "$pidfile"
+    rm $pidfile
+    eend $?
+}
